@@ -21,10 +21,8 @@ public abstract class Button {
 	
 	public void update(GameContainer gc, StateBasedGame sbg){
 		if (focus){
-			for (int i = 0; i < 6; i++){
-				if (gc.getInput().isButtonPressed(0, i)){
-					action(sbg);
-				}
+			if (gc.getInput().isButtonPressed(0, gc.getInput().ANY_CONTROLLER)){
+				action(sbg);
 			}
 			
 		}

@@ -17,8 +17,9 @@ public class Ball extends MobileEntity {
 	private float size = (GameWindow.WINDOW_HEIGHT/100)*1.5f;
 	private Color color;
 	public boolean caught = false;
-	private Player player;
+	public Player player;
 	private float rotation;
+	private Player lastPossession;
 	
 	public Ball(boolean up) {
 		shape = new Rectangle(GameWindow.WINDOW_WIDTH/2, GameWindow.WINDOW_HEIGHT/2, size, size);
@@ -36,9 +37,10 @@ public class Ball extends MobileEntity {
 		
 		if (caught){
 			rotation = (rotation + delta/2)%360;
-			Vector2f rot = new Vector2f(rotation).scale(40);
+			Vector2f rot = new Vector2f(rotation).scale(GameWindow.WINDOW_WIDTH/30);
 			shape.setLocation(shape.getX()+rot.x, shape.getY()+rot.y);
 			particles.update(new Vector2f(shape.getX(), shape.getY()), delta);
+			
 		} else {
 			particles.update(new Vector2f(shape.getX()+size/2, shape.getY()+size/2), delta);
 		}
@@ -80,6 +82,8 @@ public class Ball extends MobileEntity {
 	public void toss(Vector2f vel) {
 		this.vel = new Vector2f(vel);
 		caught = false;
+		StatsState.tosses[player.playerNumber]++;
+		lastPossession = player;
 		player = null;
 	}
 	

@@ -1,11 +1,14 @@
 package com.squareball.game.entity;
 
+import java.awt.Font;
+
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEvent;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -28,17 +31,19 @@ public class Player extends MobileEntity {
 	private int controllerNumber;
 	private Color color;
 	private float size = (GameWindow.WINDOW_HEIGHT/100)*5.5f;
-	private int countDown = 500;
+	private int countDown = 1000;
 	
 	private ParticleManager particles;
 	public int playerNumber;
 	public int team;
 	
+	private TrueTypeFont font;
+	
 	public Player(int n, int team, int pn){
 		if (team == 0){
-			shape = new Rectangle(5, GameWindow.WINDOW_HEIGHT/2, size, size);
+			shape = new Rectangle(GameWindow.WINDOW_WIDTH/5, GameWindow.WINDOW_HEIGHT/2, size, size);
 		} else {
-			shape = new Rectangle(GameWindow.WINDOW_WIDTH-5-size, GameWindow.WINDOW_HEIGHT/2, size, size);
+			shape = new Rectangle(GameWindow.WINDOW_WIDTH-GameWindow.WINDOW_WIDTH/5-size, GameWindow.WINDOW_HEIGHT/2, size, size);
 		}
 		this.team = team;
 		playerNumber = pn;
@@ -47,6 +52,7 @@ public class Player extends MobileEntity {
 		color = Color.red;
 		if (team == 0) color = Color.blue;
 		particles = new ParticleManager(size/4, 500f, 2, color, false);
+		font = new TrueTypeFont(new Font("sans-serif", 30, 30), true);
 	}
 	
 	@Override
@@ -82,6 +88,7 @@ public class Player extends MobileEntity {
 				vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*delta*sprintSpeed);
 			}
 			if (caught){
+				StatsState.ball_time[playerNumber]++;
 				ball.getShape().setLocation(shape.getX()+shape.getWidth()/2, shape.getY()+shape.getWidth()/2);
 				if (buildUp > 3f){
 					Vector2f temp = new Vector2f(vel);
@@ -111,37 +118,30 @@ public class Player extends MobileEntity {
 		graphics.setColor(color);
 		graphics.draw(shape);
 		graphics.setColor(Color.white);
-		graphics.drawString("p" + (playerNumber+1), shape.getX(), shape.getY());
+		graphics.setFont(font);
+		graphics.drawString(" " + (playerNumber+1), shape.getX(), shape.getY());
 	}
 
 	@Override
 	public void collide(GameContainer gc, EntityManager manager, Entity other) {
 		if (other instanceof Goal){
-			StatsState.goal_time[playerNumber]++;
+			if (((Goal) other).team == team){
+				goalCollide((Goal) other);
+			} else {
+				StatsState.goal_time[playerNumber]++;
+			}
+			
 		}
-//		if (other instanceof Player){
-//			if (((Player) other).team != team){
-//				if (((Player) other).caught){
-//					if (gc.getInput().isButtonPressed(2, controllerNumber)){	
-//						if (catchTime < 0) {
-//							ball = ((Player) other).getBall();
-//							caught = true;
-//							ball.grab(this);
-//							catchTime = 50;
-//							StatsState.steals[playerNumber]++;
-//						}
-//					}
-//				}
-//			}
-//		} 
+
 		if (other instanceof Ball){
-			if (((Ball) other).caught){
+			if (((Ball) other).caught && ((Ball) other).player.team != team){
 				if (gc.getInput().isButtonPressed(2, controllerNumber)){	
 					if (catchTime < 0) {
 						ball = (Ball) other;
 						caught = true;
 						ball.grab(this);
 						catchTime = 50;
+						StatsState.steals[playerNumber]++;
 					}
 				}
 			} else if (gc.getInput().isButtonPressed(2, controllerNumber)){
@@ -155,6 +155,39 @@ public class Player extends MobileEntity {
 			
 		}
 		
+	}
+	
+	public void goalCollide(Goal g) {
+//		if (team == 0 && shape.getX() < g.getShape().getX() + g.getShape().getWidth()){
+//			if (shape.getY() + shape.getHeight() > g.getShape().getY() &&
+//				shape.getY() < g.getShape().getY()){
+//				shape.setY(g.getShape().getY()-shape.getHeight());
+//			} else if (shape.getY() < g.getShape().getY() + g.getShape().getHeight() &&
+//				shape.getY() + shape.getHeight() > g.getShape().getY() + g.getShape().getHeight()){
+//				shape.setY(g.getShape().getY() + g.getShape().getHeight());
+//			} else {
+//				shape.setX(g.getShape().getX() + g.getShape().getWidth());
+//			}
+//		} else if (team != 0 && shape.getX() + shape.getWidth() > g.getShape().getX()){
+//			if (shape.getY() + shape.getHeight() > g.getShape().getY() &&
+//				shape.getY() < g.getShape().getY()){
+//				shape.setY(g.getShape().getY()-shape.getHeight());
+//			} else if (shape.getY() < g.getShape().getY() + g.getShape().getHeight() &&
+//				shape.getY() + shape.getHeight() > g.getShape().getY() + g.getShape().getHeight()){
+//				shape.setY(g.getShape().getY() + g.getShape().getHeight());
+//			} else {
+//				shape.setX(g.getShape().getX() - shape.getWidth());
+//			}
+//		}
+		if (shape.getX() < g.getShape().getX() && shape.getX() + shape.getWidth() > g.getShape().getX()){
+			shape.setX(g.getShape().getX() - shape.getWidth());
+		} else if (shape.getX() < g.getShape().getX() + g.getShape().getWidth() && shape.getX() + shape.getWidth() > g.getShape().getX() + g.getShape().getWidth()){
+			shape.setX(g.getShape().getX() + g.getShape().getWidth());
+		} else if (shape.getY() < g.getShape().getY() && shape.getY() + shape.getHeight() > g.getShape().getY()){
+			shape.setY(g.getShape().getY() - shape.getHeight());
+		} else if (shape.getY() < g.getShape().getY() + g.getShape().getHeight() && shape.getY() + shape.getHeight() > g.getShape().getY() + g.getShape().getHeight()){
+			shape.setY(g.getShape().getY() + g.getShape().getHeight());
+		}
 	}
 	
 	public void setVel(float x, float y){

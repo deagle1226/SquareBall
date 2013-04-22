@@ -46,14 +46,12 @@ public abstract class MenuState extends BasicGameState {
 	public void handleInput(GameContainer gc){
 		moveCur--;
 		if (moveCur < 0){
-			for (int i = 0; i < 6; i++){
-				if (gc.getInput().isControllerDown(i)){
-					next();
-					moveCur = moveTime;
-				} else if (gc.getInput().isControllerUp(i)){
-					prev();
-					moveCur = moveTime;
-				}
+			if (gc.getInput().isControllerDown(gc.getInput().ANY_CONTROLLER)){
+				next();
+				moveCur = moveTime;
+			} else if (gc.getInput().isControllerUp(gc.getInput().ANY_CONTROLLER)) {
+				prev();
+				moveCur = moveTime;
 			}
 		}
 		

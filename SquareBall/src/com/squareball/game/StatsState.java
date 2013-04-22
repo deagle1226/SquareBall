@@ -13,12 +13,16 @@ public class StatsState extends BasicGameState {
 	
 	public static int[] steals = {0,0,0,0};
 	public static int[] goal_time = {0,0,0,0};
+	public static int[] ball_time = {0,0,0,0};
+	public static int[] tosses = {0,0,0,0};
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		steals = new int[]{0,0,0,0};
 		goal_time = new int[]{0,0,0,0};
+		ball_time = new int[]{0,0,0,0};
+		tosses = new int[]{0,0,0,0};
 	}
 
 	@Override
@@ -29,15 +33,18 @@ public class StatsState extends BasicGameState {
 		g.setColor(Color.black);
 		if (ScoreState.score1 > ScoreState.score2){
 			g.drawString("Blue Team Wins", 10, 50);
+			g.drawString("Blue: Shit Tons" + "  Red: " + ScoreState.score2, 10, 70);
 		} else {
 			g.drawString("Red Team Wins", 10, 50);
+			g.drawString("Blue: " + ScoreState.score1 + "  Red: Shit Tons", 10, 70);
 		}
-		g.drawString("Blue: " + ScoreState.score1 + "  Red: " + ScoreState.score2, 10, 70);
 		
-		g.drawString("p1 goal time: " + goal_time[0] + "  steals: " + steals[0], 10, 100);
-		g.drawString("p2 goal time: " + goal_time[1] + "  steals: " + steals[1], 10, 120);
-		g.drawString("p3 goal time: " + goal_time[2] + "  steals: " + steals[2], 10, 140);
-		g.drawString("p4 goal time: " + goal_time[3] + "  steals: " + steals[3], 10, 160);
+		for (int i = 0; i < 4; i++){
+			g.drawString("p" + (i+1) + "  ball time: " + ball_time[i] +
+					"  goal time: " + goal_time[i] + 
+					"  steals: " + steals[i] +
+					"  throws: " + tosses[i], 10, 100 + (20*i));
+		}
 	}
 
 	@Override
@@ -46,11 +53,6 @@ public class StatsState extends BasicGameState {
 		if (gc.getInput().isKeyPressed(Keyboard.KEY_RETURN)){
 			sbg.enterState(0);
 		}
-//		for (int i = 0; i < 6; i++){
-//			if (gc.getInput().isButtonPressed(0, i)){
-//				sbg.enterState(0);
-//			}
-//		}
 	}
 
 	@Override

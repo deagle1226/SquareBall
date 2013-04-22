@@ -18,15 +18,18 @@ public class Goal extends StaticEntity {
 	private int scoreSize = GameWindow.WINDOW_WIDTH/128;
 	private int scorePause = 25;
 	private int scoreTime = 0;
+	public int team;
 	
 	public Goal(boolean left){
 		this.left = left;
 		if (left){
 			shape = new Rectangle(0, GameWindow.WINDOW_HEIGHT/3, GameWindow.WINDOW_WIDTH/8, GameWindow.WINDOW_HEIGHT/3);
 			color = Color.blue;
+			team = 0;
 		} else {
 			shape = new Rectangle(GameWindow.WINDOW_WIDTH-GameWindow.WINDOW_WIDTH/8, GameWindow.WINDOW_HEIGHT/3, GameWindow.WINDOW_WIDTH/8, GameWindow.WINDOW_HEIGHT/3);
 			color = Color.red;
+			team = 1;
 		}
 	}
 	

@@ -13,6 +13,7 @@ public class GameWindow extends StateBasedGame {
 	
 	public static final int WINDOW_WIDTH = 1280;
 	public static final int WINDOW_HEIGHT = 720;
+	private static boolean fullScreen = false;
 
 	public GameWindow() {
 		super("SquareBall");
@@ -23,7 +24,7 @@ public class GameWindow extends StateBasedGame {
 		gc.setTargetFrameRate(60);
 		gc.getInput().clearControlPressedRecord();
 		gc.setMouseGrabbed(true);
-		//gc.getGraphics().setFont(new TrueTypeFont(new Font("Oswald", Font.PLAIN, 18), true));
+		//gc.getGraphics().setFont(new TrueTypeFont(new Font("sans-serif", Font.PLAIN, 18), true));
 		this.addState(new StartMenuState());
 		this.addState(new PlayState());
 		this.addState(new StatsState());
@@ -46,7 +47,7 @@ public class GameWindow extends StateBasedGame {
 		window.addState(new PlayState());
 		
 		AppGameContainer app = new AppGameContainer(new GameWindow());
-		app.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, false);
+		app.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, fullScreen);
 		app.start();
 	}
 

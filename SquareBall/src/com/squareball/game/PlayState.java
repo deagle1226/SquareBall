@@ -25,6 +25,8 @@ public class PlayState extends BasicGameState implements EntityManager {
 	private ArrayList<Entity> addList = new ArrayList<Entity>();
 	/** The list of entities to be removed at the next opportunity */
 	private ArrayList<Entity> removeList = new ArrayList<Entity>();
+	
+	private boolean paused = false;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
@@ -79,6 +81,7 @@ public class PlayState extends BasicGameState implements EntityManager {
 		
 		Ball b = new Ball(true);
 		entities.add(b);
+		paused = false;
 	}
 
 	@Override
@@ -93,30 +96,39 @@ public class PlayState extends BasicGameState implements EntityManager {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		if (ScoreState.score1 >= ScoreState.maxScore || ScoreState.score2 >= ScoreState.maxScore){
-			sbg.enterState(2);
-		}
-		
-		for (int i=0;i<entities.size();i++) {
-			Entity entity = (Entity) entities.get(i);
+		if (!paused){
+			if (gc.getInput().isKeyPressed(Keyboard.KEY_SPACE)){
+				paused = true;
+			}
+			if (ScoreState.score1 >= ScoreState.maxScore || ScoreState.score2 >= ScoreState.maxScore){
+				sbg.enterState(2);
+			}
 			
-			for (int j=i+1;j<entities.size();j++) {
-				Entity other = (Entity) entities.get(j);
+			for (int i=0;i<entities.size();i++) {
+				Entity entity = (Entity) entities.get(i);
 				
-				if (entity.intersects(other)) {
-					entity.collide(gc, this, other);
-					other.collide(gc, this, entity);
+				for (int j=i+1;j<entities.size();j++) {
+					Entity other = (Entity) entities.get(j);
+					
+					if (entity.intersects(other)) {
+						entity.collide(gc, this, other);
+						other.collide(gc, this, entity);
+					}
 				}
 			}
-		}
-		entities.removeAll(removeList);
-		entities.addAll(addList);
-		
-		removeList.clear();
-		addList.clear();
-		
-		for (Entity e : entities) {
-			e.update(gc, this, delta);
+			entities.removeAll(removeList);
+			entities.addAll(addList);
+			
+			removeList.clear();
+			addList.clear();
+			
+			for (Entity e : entities) {
+				e.update(gc, this, delta);
+			}
+		} else {
+			if (gc.getInput().isKeyPressed(Keyboard.KEY_SPACE)){
+				paused = false;
+			}
 		}
 		
 	}
