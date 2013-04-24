@@ -15,7 +15,7 @@ import com.squareball.game.particles.ParticleManager;
 
 public class Player extends MobileEntity {
 	
-	private float speed = 0.01f * (GameWindow.WINDOW_WIDTH/1280f);
+	private float speed = 0.01f * ((float)GameWindow.WINDOW_WIDTH/1280f);
 	public int sprintTime = 0;
 	private float sprintSpeed = 3f;
 	private int sprintCooldown = 300;
@@ -75,6 +75,7 @@ public class Player extends MobileEntity {
 					sprintTime = 200;
 					sprintCooldown = 205;
 					sprinted = true;
+					StatsState.hustles[playerNumber]++;
 				} else if (!gc.getInput().isButtonPressed(0, controllerNumber)){
 					sprinted = false;
 				}

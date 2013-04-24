@@ -19,6 +19,7 @@ public class StatsState extends BasicGameState {
 	public static int[] goal_time = {0,0,0,0};
 	public static int[] ball_time = {0,0,0,0};
 	public static int[] tosses = {0,0,0,0};
+	public static int[] hustles = {0,0,0,0};
 	
 	private UnicodeFont font18;
 	private UnicodeFont font32;
@@ -31,6 +32,7 @@ public class StatsState extends BasicGameState {
 		goal_time = new int[]{0,0,0,0};
 		ball_time = new int[]{0,0,0,0};
 		tosses = new int[]{0,0,0,0};
+		hustles = new int[]{0,0,0,0};
 		font18 = new UnicodeFont("res/oswald.ttf", 18 , false, false);
 		font18.addAsciiGlyphs();
 		font18.getEffects().add(new ColorEffect());
@@ -81,6 +83,7 @@ public class StatsState extends BasicGameState {
 			font18.drawString(x, y+lineHeight+20, "Steals: " + steals[i], Color.white);
 			font18.drawString(x, y+lineHeight*2+20, "Throws: " + tosses[i], Color.white);
 			font18.drawString(x, y+lineHeight*3+20, "Possession: " + min_sec(ball_time[i]), Color.white);
+			font18.drawString(x, y+lineHeight*4+20, "Hustlin' " + hustles[i] + " times a game", Color.white);
 		}
 	}
 	
@@ -91,6 +94,7 @@ public class StatsState extends BasicGameState {
 		g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
 		g.fill(shape);
 		g.setColor(color);
+		g.fill(new Rectangle(shape.getX(), shape.getY(), shape.getWidth() * ((float)ScoreState.score1/96f), shape.getHeight()));
 		g.draw(shape);
 		font32.drawString(shape.getX()+padding, shape.getY()+padding, ScoreState.score1+"", Color.white);
 		color = Color.red;
@@ -98,6 +102,7 @@ public class StatsState extends BasicGameState {
 		g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
 		g.fill(shape);
 		g.setColor(color);
+		g.fill(new Rectangle(shape.getX(), shape.getY(), shape.getWidth() * ((float)ScoreState.score2/96f), shape.getHeight()));
 		g.draw(shape);
 		font32.drawString(shape.getX()+padding, shape.getY()+padding, ScoreState.score2+"", Color.white);
 	}
