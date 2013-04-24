@@ -2,8 +2,6 @@ package com.squareball.game;
 
 import java.util.ArrayList;
 
-import net.java.games.input.Controller;
-
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -105,10 +103,10 @@ public class PlayState extends BasicGameState implements EntityManager {
 			}
 			
 			for (int i=0;i<entities.size();i++) {
-				Entity entity = (Entity) entities.get(i);
+				Entity entity = entities.get(i);
 				
 				for (int j=i+1;j<entities.size();j++) {
-					Entity other = (Entity) entities.get(j);
+					Entity other = entities.get(j);
 					
 					if (entity.intersects(other)) {
 						entity.collide(gc, this, other);

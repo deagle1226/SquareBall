@@ -2,9 +2,6 @@ package com.squareball.game.entity;
 
 import java.awt.Font;
 
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEvent;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

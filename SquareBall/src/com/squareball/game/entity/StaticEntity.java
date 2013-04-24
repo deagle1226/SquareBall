@@ -2,7 +2,6 @@ package com.squareball.game.entity;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Vector2f;
 
 public abstract class StaticEntity implements Entity {
 	
