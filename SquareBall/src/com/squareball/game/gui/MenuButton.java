@@ -18,9 +18,11 @@ public class MenuButton extends Button {
 	public void action(StateBasedGame sbg) {
 		if (target == 2) {
 			GameSettings.superMode();
-			sbg.enterState(target-1);
-		}
-		else {
+			sbg.enterState(1);
+		} else if (target == 3){
+			GameSettings.bigFieldMode();
+			sbg.enterState(1);
+		} else {
 			if (target == 1) GameSettings.classicMode();
 			sbg.enterState(target);
 		}

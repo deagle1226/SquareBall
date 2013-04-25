@@ -40,7 +40,7 @@ public abstract class MenuState extends BasicGameState {
 		font32.addAsciiGlyphs();
 		font32.getEffects().add(new ColorEffect());
 		font32.loadGlyphs();
-		font64 = new UnicodeFont("res/oswald.ttf", (int) (64*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
+		font64 = new UnicodeFont("res/oswald.ttf", (int) (128*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
 		font64.addAsciiGlyphs();
 		font64.getEffects().add(new ColorEffect());
 		font64.loadGlyphs();
@@ -50,7 +50,7 @@ public abstract class MenuState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		map.render(g);
-		font64.drawString(GameWindow.WINDOW_WIDTH/2f - font64.getWidth(getTitle().toUpperCase())/2f, 100, getTitle().toUpperCase(), Color.lightGray);
+		font64.drawString(GameWindow.WINDOW_WIDTH/2f - font64.getWidth(getTitle().toUpperCase())/2f, 0, getTitle().toUpperCase(), Color.lightGray);
 		for (Button b : buttons){
 			b.render(g, font32);
 		}

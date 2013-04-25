@@ -41,6 +41,18 @@ public class GameWindow extends StateBasedGame {
 			}
 			enterState(0);
 		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_M)){
+			if (music.playing()) music.pause();
+			else music.resume();
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_UP)){
+			gc.setMusicVolume(gc.getMusicVolume()+(0.05f));
+			if (gc.getMusicVolume() > 1) gc.setMusicVolume(1f);
+			
+		} else if (gc.getInput().isKeyPressed(Keyboard.KEY_DOWN)){
+			gc.setMusicVolume(gc.getMusicVolume()-(0.05f));
+			if (gc.getMusicVolume() < 0) gc.setMusicVolume(0f);
+		}
 		super.update(gc, delta);
 	}
 

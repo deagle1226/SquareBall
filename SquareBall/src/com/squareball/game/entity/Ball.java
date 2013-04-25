@@ -43,7 +43,7 @@ public class Ball extends MobileEntity {
 		if (caught){
 			vel = new Vector2f(0,0);
 			rotation = (rotation + delta/2)%360;
-			Vector2f rot = new Vector2f(rotation).scale(GameWindow.WINDOW_WIDTH/30);
+			Vector2f rot = new Vector2f(rotation).scale(GameSettings.ballRotationRadius);
 			shape.setLocation(shape.getX()+rot.x, shape.getY()+rot.y);
 			particles.update(new Vector2f(shape.getX(), shape.getY()), delta);
 			

@@ -142,6 +142,7 @@ public class Player extends MobileEntity {
 	public void collide(GameContainer gc, EntityManager manager, Entity other) {
 		if (other instanceof Goal){
 			if (((Goal) other).team == team){
+				if (!GameSettings.goal_passive)
 				goalCollide((Goal) other);
 			} else {
 				StatsState.goal_time[playerNumber]++;

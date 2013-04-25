@@ -18,9 +18,10 @@ public class StartMenuState extends MenuState {
 		super.init(gc, sbg);
 		float height = GameWindow.WINDOW_HEIGHT/8;
 		float width = GameWindow.WINDOW_WIDTH/4;
-		buttons.add(new MenuButton(1, "Classic SquareBall", GameWindow.WINDOW_WIDTH/2-width/2, GameWindow.WINDOW_HEIGHT/2, width, height));
-		buttons.add(new MenuButton(2, "Super SquareBall", GameWindow.WINDOW_WIDTH/2-width/2, GameWindow.WINDOW_HEIGHT/2+height+10, width, height));
-		buttons.add(new ExitButton(GameWindow.WINDOW_WIDTH/2-width/2, GameWindow.WINDOW_HEIGHT/2+2*height+20, width, height));
+		buttons.add(new MenuButton(1, "Classic SquareBall", GameWindow.WINDOW_WIDTH/2-width/2, GameWindow.WINDOW_HEIGHT/2-100, width, height));
+		buttons.add(new MenuButton(2, "Super SquareBall", GameWindow.WINDOW_WIDTH/2-width/2, GameWindow.WINDOW_HEIGHT/2+height+10-100, width, height));
+		buttons.add(new MenuButton(3, "Epic SquareBall", GameWindow.WINDOW_WIDTH/2-width/2, GameWindow.WINDOW_HEIGHT/2+2*height+20-100, width, height));
+		buttons.add(new ExitButton(GameWindow.WINDOW_WIDTH/2-width/2, GameWindow.WINDOW_HEIGHT/2+3*height+30-100, width, height));
 	}
 
 	@Override
