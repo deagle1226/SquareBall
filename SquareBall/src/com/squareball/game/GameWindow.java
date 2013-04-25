@@ -3,14 +3,16 @@ package com.squareball.game;
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class GameWindow extends StateBasedGame {
 	
-	public static final int WINDOW_WIDTH = 1920;
-	public static final int WINDOW_HEIGHT = 1080;
+	public static final int WINDOW_WIDTH = 1280;
+	public static final int WINDOW_HEIGHT = 720;
 	private static boolean fullScreen = false;
+	private Music music;
 
 	public GameWindow() {
 		super("SquareBall");
@@ -18,6 +20,9 @@ public class GameWindow extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
+		music = new Music("res/music.ogg", false);
+		gc.setMusicVolume(0.35f);
+		music.loop();
 		gc.setTargetFrameRate(60);
 		gc.getInput().clearControlPressedRecord();
 		gc.setMouseGrabbed(true);

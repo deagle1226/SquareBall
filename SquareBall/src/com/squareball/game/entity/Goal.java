@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
+import com.squareball.game.GameSettings;
 import com.squareball.game.GameWindow;
 import com.squareball.game.ScoreState;
 
@@ -13,19 +14,19 @@ public class Goal extends StaticEntity {
 	
 	private Color color;
 	private boolean left;
-	private int scoreSize = GameWindow.WINDOW_WIDTH/128;
-	private int scorePause = 25;
+	private int scoreSize = (int) (GameSettings.goalWidth/20);
+	private int scorePause = 51;
 	private int scoreTime = 0;
 	public int team;
 	
 	public Goal(boolean left){
 		this.left = left;
 		if (left){
-			shape = new Rectangle(0, GameWindow.WINDOW_HEIGHT/3, GameWindow.WINDOW_WIDTH/8, GameWindow.WINDOW_HEIGHT/3);
+			shape = new Rectangle(0, GameWindow.WINDOW_HEIGHT/2 - GameSettings.goalHeight/2, GameSettings.goalWidth, GameSettings.goalHeight);
 			color = Color.blue;
 			team = 0;
 		} else {
-			shape = new Rectangle(GameWindow.WINDOW_WIDTH-GameWindow.WINDOW_WIDTH/8, GameWindow.WINDOW_HEIGHT/3, GameWindow.WINDOW_WIDTH/8, GameWindow.WINDOW_HEIGHT/3);
+			shape = new Rectangle(GameWindow.WINDOW_WIDTH-GameSettings.goalWidth, GameWindow.WINDOW_HEIGHT/2 - GameSettings.goalHeight/2, GameSettings.goalWidth, GameSettings.goalHeight);
 			color = Color.red;
 			team = 1;
 		}
@@ -41,7 +42,8 @@ public class Goal extends StaticEntity {
 			for (int i = 0; i < ScoreState.score1; i++){
 				float r1 = (float) (Math.random()*3);
 				float r2 = (float) (Math.random()*3);
-				Shape point = new Rectangle((2*scoreSize)*(i%8)+scoreSize/2+r1-1, GameWindow.WINDOW_HEIGHT/3 +(2*scoreSize *(i/8))+scoreSize/2+r2-1, scoreSize, scoreSize);
+				Rectangle point = new Rectangle(0,0,GameSettings.goalWidth/20,GameSettings.goalHeight/20);
+				point.setLocation((2*point.getWidth())*(i%10)+point.getWidth()/2+r1-1, shape.getY() +(2*point.getHeight() *(i/10))+point.getHeight()+r2-1-point.getHeight()/2);
 				graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/4));
 				graphics.fill(point);
 				graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
@@ -51,7 +53,9 @@ public class Goal extends StaticEntity {
 			for (int i = 0; i < ScoreState.score2; i++){
 				float r1 = (float) (Math.random()*3);
 				float r2 = (float) (Math.random()*3);
-				Shape point = new Rectangle((GameWindow.WINDOW_WIDTH-shape.getWidth())+(2*scoreSize)*(i%8)+scoreSize/2+r1, GameWindow.WINDOW_HEIGHT/3 +(2*scoreSize *(i/8))+scoreSize/2+r2, scoreSize, scoreSize);
+				//Shape point = new Rectangle(shape.getX()+(2*scoreSize)*(i%10)+scoreSize/2+r1, shape.getY() +(3*scoreSize *(i/10))+scoreSize+r2, scoreSize, scoreSize*2);
+				Rectangle point = new Rectangle(0,0,GameSettings.goalWidth/20,GameSettings.goalHeight/20);
+				point.setLocation((2*point.getWidth())*(i%10)+point.getWidth()/2+r1-1 + shape.getMinX(), shape.getY() +(2*point.getHeight() *(i/10))+point.getHeight()+r2-1-point.getHeight()/2);
 				graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/4));
 				graphics.fill(point);
 				graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
@@ -71,6 +75,11 @@ public class Goal extends StaticEntity {
 				if (left) ScoreState.score1++;
 				else ScoreState.score2++;
 				scoreTime = scorePause;
+				if (ScoreState.score1 > GameSettings.maxScore-5 || ScoreState.score1 > GameSettings.maxScore-5){
+					manager.point(true);
+				} else {
+					manager.point(false);
+				}
 			}
 			
 		}

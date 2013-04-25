@@ -20,6 +20,9 @@ public class StatsState extends BasicGameState {
 	public static int[] ball_time = {0,0,0,0};
 	public static int[] tosses = {0,0,0,0};
 	public static int[] hustles = {0,0,0,0};
+	public static int[] interceptions = {0,0,0,0};
+	public static int[] catches = {0,0,0,0};
+	public static int[] points = {0,0,0,0};
 	
 	private UnicodeFont font18;
 	private UnicodeFont font32;
@@ -28,19 +31,25 @@ public class StatsState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+		
 		steals = new int[]{0,0,0,0};
 		goal_time = new int[]{0,0,0,0};
 		ball_time = new int[]{0,0,0,0};
 		tosses = new int[]{0,0,0,0};
 		hustles = new int[]{0,0,0,0};
-		font18 = new UnicodeFont("res/oswald.ttf", 18 , false, false);
+		interceptions = new int[]{0,0,0,0};
+		catches = new int[]{0,0,0,0};
+		points = new int[]{0,0,0,0};
+		
+		font18 = new UnicodeFont("res/oswald.ttf", (int) (18*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
 		font18.addAsciiGlyphs();
 		font18.getEffects().add(new ColorEffect());
 		font18.loadGlyphs();
-		font32 = new UnicodeFont("res/oswald.ttf", 32 , false, false);
+		font32 = new UnicodeFont("res/oswald.ttf", (int) (32*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
 		font32.addAsciiGlyphs();
 		font32.getEffects().add(new ColorEffect());
 		font32.loadGlyphs();
+		
 		map = new Map();
 	}
 
@@ -74,16 +83,19 @@ public class StatsState extends BasicGameState {
 		float padding = 10;
 		float width = GameWindow.WINDOW_WIDTH/6-padding;
 		float offset = GameWindow.WINDOW_WIDTH/6;
-		float lineHeight = 30;
+		float lineHeight = font32.getLineHeight();
 		g.setColor(Color.white);
 		for (int i = 0; i < 4; i++) {
 			float x = offset + (i*(width+padding))+padding;
 			float y = GameWindow.WINDOW_HEIGHT/4 + padding;
 			font32.drawString(x, y, "Player " + (i+1), Color.white);
-			font18.drawString(x, y+lineHeight+20, "Steals: " + steals[i], Color.white);
-			font18.drawString(x, y+lineHeight*2+20, "Throws: " + tosses[i], Color.white);
-			font18.drawString(x, y+lineHeight*3+20, "Possession: " + min_sec(ball_time[i]), Color.white);
-			font18.drawString(x, y+lineHeight*4+20, "Hustlin' " + hustles[i] + " times a game", Color.white);
+			font18.drawString(x, y+lineHeight, "Steals: " + steals[i], Color.white);
+			font18.drawString(x, y+lineHeight+font18.getLineHeight(), "Throws: " + tosses[i], Color.white);
+			font18.drawString(x, y+lineHeight+font18.getLineHeight()*2, "Possession: " + min_sec(ball_time[i]), Color.white);
+			font18.drawString(x, y+lineHeight+font18.getLineHeight()*3, "Hustlin' " + hustles[i] + " times a game", Color.white);
+			font18.drawString(x, y+lineHeight+font18.getLineHeight()*4, "Interceptions: " + interceptions[i], Color.white);
+			font18.drawString(x, y+lineHeight+font18.getLineHeight()*5, "Catches: " + catches[i], Color.white);
+			font18.drawString(x, y+lineHeight+font18.getLineHeight()*6, "Points: " + points[i], Color.white);
 		}
 	}
 	
@@ -94,17 +106,17 @@ public class StatsState extends BasicGameState {
 		g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
 		g.fill(shape);
 		g.setColor(color);
-		g.fill(new Rectangle(shape.getX(), shape.getY(), shape.getWidth() * ((float)ScoreState.score1/96f), shape.getHeight()));
+		g.fill(new Rectangle(shape.getX() + padding, shape.getY()+ padding, (shape.getWidth()-(2*padding)) * ((float)ScoreState.score1/(float)ScoreState.maxScore), shape.getHeight()-2*padding));
 		g.draw(shape);
-		font32.drawString(shape.getX()+padding, shape.getY()+padding, ScoreState.score1+"", Color.white);
+		font32.drawString(shape.getCenterX()-font32.getWidth(ScoreState.score1+"")/2, shape.getCenterY()-font32.getLineHeight()/2, ScoreState.score1+"", Color.white);
 		color = Color.red;
 		shape = new Rectangle(GameWindow.WINDOW_WIDTH-(GameWindow.WINDOW_WIDTH/4 + GameWindow.WINDOW_WIDTH/5), GameWindow.WINDOW_HEIGHT/12, GameWindow.WINDOW_WIDTH/5, GameWindow.WINDOW_HEIGHT/8);
 		g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
 		g.fill(shape);
 		g.setColor(color);
-		g.fill(new Rectangle(shape.getX(), shape.getY(), shape.getWidth() * ((float)ScoreState.score2/96f), shape.getHeight()));
+		g.fill(new Rectangle(shape.getX() + padding, shape.getY()+ padding, (shape.getWidth()-(2*padding)) * ((float)ScoreState.score2/(float)ScoreState.maxScore), shape.getHeight()-2*padding));
 		g.draw(shape);
-		font32.drawString(shape.getX()+padding, shape.getY()+padding, ScoreState.score2+"", Color.white);
+		font32.drawString(shape.getCenterX()-font32.getWidth(ScoreState.score2+"")/2, shape.getCenterY()-font32.getLineHeight()/2, ScoreState.score2+"", Color.white);
 	}
 	
 	public void drawBoxes(Graphics g){
@@ -127,7 +139,7 @@ public class StatsState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		if (gc.getInput().isKeyPressed(Keyboard.KEY_RETURN)){
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_RETURN) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)){
 			sbg.enterState(0);
 		}
 	}

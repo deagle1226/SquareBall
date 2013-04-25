@@ -22,12 +22,31 @@ public class ParticleManager {
 	private Color color;
 	private boolean rainbow;
 	
+	private float x, y;
+	
 	public ParticleManager(float r, float life, int density, Color color, boolean rainbow){
 		particles = new ArrayList<Particle>();
 		add = new ArrayList<Particle>();
 		remove = new ArrayList<Particle>();
 		tick = 1;
+		x = r;
+		y = r;
 		radius = r;
+		this.life = life;
+		this.density = density;
+		this.colorFreq = freq;
+		this.color =color;
+		this.rainbow = rainbow;
+	}
+	
+	public ParticleManager(float x, float y, float life, int density, Color color, boolean rainbow){
+		particles = new ArrayList<Particle>();
+		add = new ArrayList<Particle>();
+		remove = new ArrayList<Particle>();
+		tick = 1;
+		this.x = x/2;
+		this.y = y/2;
+		radius = 10;
 		this.life = life;
 		this.density = density;
 		this.colorFreq = freq;
@@ -65,8 +84,8 @@ public class ParticleManager {
 	}
 	
 	public void add(Vector2f pos, float r){
-		float dx = (float) (Math.sin(Math.random()*100f)*(2*r));
-		float dy = (float) (Math.sin(Math.random()*100f)*(2*r));
+		float dx = (float) (Math.sin(Math.random()*100f)*(2*x));
+		float dy = (float) (Math.sin(Math.random()*100f)*(2*y));
 		add.add(new Particle(new Vector2f(pos.x+dx, pos.y+dy), radius, life, color, rainbow));
 	}
 	

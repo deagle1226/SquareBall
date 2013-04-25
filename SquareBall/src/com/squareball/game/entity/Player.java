@@ -5,36 +5,41 @@ import java.awt.Font;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
+import com.squareball.game.GameSettings;
 import com.squareball.game.GameWindow;
 import com.squareball.game.StatsState;
 import com.squareball.game.particles.ParticleManager;
 
 public class Player extends MobileEntity {
 	
-	private float speed = 0.01f * ((float)GameWindow.WINDOW_WIDTH/1280f);
+	private float speed = GameSettings.playerSpeed;
 	public int sprintTime = 0;
-	private float sprintSpeed = 3f;
-	private int sprintCooldown = 300;
+	private float sprintSpeed = GameSettings.hustleSpeed;
+	private int sprintCooldown = GameSettings.hustleCooldown;
 	private boolean sprinted = false;
 	private int catchTime = 0;
 	private Ball ball;
 	private float buildUp = 0;
+	private float maxThrowSpeed = GameSettings.maxBallVel;
 	public boolean caught = false;
 	
 	private int controllerNumber;
 	private Color color;
-	private float size = (GameWindow.WINDOW_HEIGHT/100)*5.5f;
-	private int countDown = 1000;
+	private float size = GameSettings.playerSize;
 	
 	private ParticleManager particles;
 	public int playerNumber;
 	public int team;
+	private boolean triggered = false;
 	
-	private TrueTypeFont font;
+	private UnicodeFont font;
 	
 	public Player(int n, int team, int pn){
 		if (team == 0){
@@ -49,62 +54,76 @@ public class Player extends MobileEntity {
 		color = Color.red;
 		if (team == 0) color = Color.blue;
 		particles = new ParticleManager(size/4, 500f, 2, color, false);
-		font = new TrueTypeFont(new Font("sans-serif", 30, 30), true);
+		try {
+			font = new UnicodeFont("res/oswald.ttf", (int) (size*.75), false, false);
+			font.addAsciiGlyphs();
+			font.getEffects().add(new ColorEffect());
+			font.loadGlyphs();
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public void update(GameContainer gc, EntityManager manager, int delta){
 		particles.update(new Vector2f(shape.getX()+size/2, shape.getY()+size/2), delta);
 		catchTime-=delta;
-		controllerUpdate(gc, delta);
+		controllerUpdate(gc, manager, delta);
 		super.update(gc, manager, delta);
 	}
 	
-	public void controllerUpdate(GameContainer gc, int delta){
-		countDown -= delta;
+	public void controllerUpdate(GameContainer gc, EntityManager manager, int delta){
 		vel.x = 0;
 		vel.y = 0;
-		if (countDown < 0){
-			countDown = 0;
-			vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed*delta);
-			vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*delta);
-			sprintCooldown -= delta;
-			sprintTime -= delta;
-			if (sprintCooldown < 0){
-				if (gc.getInput().isButtonPressed(0, controllerNumber) && !sprinted){
-					sprintTime = 200;
-					sprintCooldown = 205;
-					sprinted = true;
-					StatsState.hustles[playerNumber]++;
-				} else if (!gc.getInput().isButtonPressed(0, controllerNumber)){
-					sprinted = false;
-				}
-			}
-			
-			if (sprintTime > 0 && !caught){
-				vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed*delta*sprintSpeed);
-				vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*delta*sprintSpeed);
-			}
-			if (caught){
-				StatsState.ball_time[playerNumber]++;
-				ball.getShape().setLocation(shape.getX()+shape.getWidth()/2, shape.getY()+shape.getWidth()/2);
-				if (buildUp > 3f){
-					Vector2f temp = new Vector2f(vel);
-					temp = temp.normalise();
-					ball.toss(temp.scale(buildUp));
-					caught = false;
-					buildUp = 0;
-				} else if (gc.getInput().isButtonPressed(1, controllerNumber)){
-					buildUp += 0.1f;
-				} else if (buildUp > 0){
-					Vector2f temp = new Vector2f(vel);
-					temp = temp.normalise();
-					ball.toss(temp.scale(buildUp));
-					caught = false;
-					buildUp = 0;
-				}
+		vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed*delta);
+		vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*delta);
+		sprintCooldown -= delta;
+		sprintTime -= delta;
+		if (sprintCooldown < 0 && !caught){
+			float axis = gc.getInput().getAxisValue(controllerNumber, 4);
+			if (axis == -1f) axis = 0;
+			if ((axis < -0.5) && !sprinted && !triggered){
+				sprintTime = GameSettings.hustleLength;
+				sprintCooldown = GameSettings.hustleCooldown;
+				sprinted = true;
+				StatsState.hustles[playerNumber]++;
+				manager.hustle();
+				triggered = true;
+			} else {
+				sprinted = false;
 			}
 		}
+		if (gc.getInput().getAxisValue(controllerNumber, 4) == 0){
+			triggered = false;
+		}
+		if (sprintTime > 0){
+			vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed*delta*sprintSpeed);
+			vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*delta*sprintSpeed);
+		}
+		if (caught){
+			StatsState.ball_time[playerNumber]++;
+			ball.getShape().setLocation(shape.getCenterX(), shape.getCenterY());
+			if (buildUp > maxThrowSpeed){
+				Vector2f temp = new Vector2f(vel);
+				temp = temp.normalise();
+				ball.toss(temp.scale(buildUp), manager);
+				caught = false;
+				buildUp = 0;
+			} else if (gc.getInput().isButtonPressed(2, controllerNumber) && catchTime < 0){
+				buildUp += GameSettings.buildUpSpeed;
+				
+			} else if (buildUp > 0){
+				Vector2f temp = new Vector2f(vel);
+				temp = temp.normalise();
+				ball.toss(temp.scale(buildUp), manager);
+				caught = false;
+				buildUp = 0;
+			}
+		} else if (gc.getInput().isButtonPressed(0, controllerNumber)){
+			if (catchTime < 0) catchTime = GameSettings.catchCooldown;
+		}
+		//System.out.println(catchTime);
 	}
 	
 
@@ -116,8 +135,7 @@ public class Player extends MobileEntity {
 		graphics.setColor(color);
 		graphics.draw(shape);
 		graphics.setColor(Color.white);
-		graphics.setFont(font);
-		graphics.drawString(" " + (playerNumber+1), shape.getX(), shape.getY());
+		font.drawString(shape.getCenterX()-font.getWidth((playerNumber+1)+"")/2, shape.getCenterY()-font.getLineHeight()/2, (playerNumber+1)+"", Color.white);
 	}
 
 	@Override
@@ -133,21 +151,21 @@ public class Player extends MobileEntity {
 
 		if (other instanceof Ball){
 			if (((Ball) other).caught && ((Ball) other).player.team != team){
-				if (gc.getInput().isButtonPressed(2, controllerNumber)){	
+				if (gc.getInput().isButtonPressed(0, controllerNumber)){	
 					if (catchTime < 0) {
 						ball = (Ball) other;
 						caught = true;
-						ball.grab(this);
-						catchTime = 50;
+						ball.grab(this, manager);
+						catchTime = GameSettings.catchCooldown;
 						StatsState.steals[playerNumber]++;
 					}
 				}
-			} else if (gc.getInput().isButtonPressed(2, controllerNumber)){
+			} else if (gc.getInput().isButtonPressed(0, controllerNumber)){
 				if (catchTime < 0) {
 					ball = (Ball) other;
 					caught = true;
-					ball.grab(this);
-					catchTime = 50;
+					ball.grab(this, manager);
+					catchTime = GameSettings.catchCooldown;
 				}
 			}
 			
