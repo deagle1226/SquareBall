@@ -44,8 +44,8 @@ public class Ball extends MobileEntity {
 			vel = new Vector2f(0,0);
 			rotation = (rotation + delta/2)%360;
 			Vector2f rot = new Vector2f(rotation).scale(GameSettings.ballRotationRadius);
-			shape.setLocation(shape.getX()+rot.x, shape.getY()+rot.y);
-			particles.update(new Vector2f(shape.getX(), shape.getY()), delta);
+			shape.setLocation(shape.getX()+rot.x-shape.getWidth()/2, shape.getY()+rot.y-shape.getHeight()/2);
+			particles.update(new Vector2f(shape.getCenterX(), shape.getCenterY()), delta);
 			
 		} else {
 			particles.update(new Vector2f(shape.getCenterX(), shape.getCenterY()), delta);
@@ -64,10 +64,10 @@ public class Ball extends MobileEntity {
 	public void render(Graphics graphics) {
 		particles.render(graphics);
 		
-//		graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/3));
-//		graphics.fill(shape);
-//		graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
-//		graphics.draw(shape);
+		graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/3));
+		graphics.fill(shape);
+		graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()/2));
+		graphics.draw(shape);
 	}
 
 	@Override

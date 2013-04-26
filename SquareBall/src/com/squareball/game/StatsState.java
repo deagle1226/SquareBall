@@ -94,8 +94,8 @@ public class StatsState extends BasicGameState {
 			font18.drawString(x, y+lineHeight+font18.getLineHeight()*2, "Possession: " + min_sec(ball_time[i]), Color.white);
 			font18.drawString(x, y+lineHeight+font18.getLineHeight()*3, "Hustlin' " + hustles[i] + " times a game", Color.white);
 			font18.drawString(x, y+lineHeight+font18.getLineHeight()*4, "Interceptions: " + interceptions[i], Color.white);
-			font18.drawString(x, y+lineHeight+font18.getLineHeight()*5, "Catches: " + catches[i], Color.white);
-			font18.drawString(x, y+lineHeight+font18.getLineHeight()*6, "Points: " + points[i], Color.white);
+			font18.drawString(x, y+lineHeight+font18.getLineHeight()*5, "Completed Passes: " + catches[i], Color.white);
+			//font18.drawString(x, y+lineHeight+font18.getLineHeight()*6, "Points: " + points[i], Color.white);
 		}
 	}
 	

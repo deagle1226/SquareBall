@@ -151,7 +151,9 @@ public class Player extends MobileEntity {
 		}
 
 		if (other instanceof Ball){
-			if (((Ball) other).caught && ((Ball) other).player.team != team){
+			if (caught){
+				
+			} else if (((Ball) other).caught && ((Ball) other).player.team != team){
 				if (gc.getInput().isButtonPressed(0, controllerNumber)){	
 					if (catchTime < 0) {
 						ball = (Ball) other;

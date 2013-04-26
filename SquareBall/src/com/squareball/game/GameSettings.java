@@ -31,25 +31,25 @@ public class GameSettings {
 	
 	
 	public static void superMode(){
-		goal_passive = true;
+		goal_passive = false;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*7f;
-		playerSpeed = 0.03f * ((float)GameWindow.WINDOW_WIDTH/1280f);
+		playerSpeed = 0.023f * ((float)GameWindow.WINDOW_WIDTH/1280f);
 		
 		hustleLength = 100;
-		hustleCooldown = 105;
+		hustleCooldown = 125;
 		hustleSpeed = 3f; // multiplier of playerSpeed
 		
 		ballSize = (GameWindow.WINDOW_HEIGHT/100)*3f;
 		maxBallVel = 5f; // multiplier of playerSpeed
 		buildUpSpeed = 0.2f;
 		jumpBallSpeed = 1.5f;
-		ballRotationRadius = GameWindow.WINDOW_WIDTH/20f;
+		ballRotationRadius = GameWindow.WINDOW_WIDTH/25f;
 		
 		goalHeight = GameWindow.WINDOW_HEIGHT/2f;
 		goalWidth = GameWindow.WINDOW_WIDTH/6f;
 		
-		friction_map = 1f; // NO FRICTION!
-		friction_goal = 0.8f;
+		friction_map = 0.985f; // NO FRICTION!
+		friction_goal = 1.025f;
 	}
 	
 	public static void classicMode() {
@@ -65,7 +65,7 @@ public class GameSettings {
 		maxBallVel = 4f; // multiplier of playerSpeed
 		buildUpSpeed = 0.1f;
 		jumpBallSpeed = 2f;
-		ballRotationRadius = GameWindow.WINDOW_WIDTH/30f;
+		ballRotationRadius = GameWindow.WINDOW_WIDTH/35f;
 		
 		goalHeight = GameWindow.WINDOW_HEIGHT/3f;
 		goalWidth = GameWindow.WINDOW_WIDTH/8f;
@@ -75,19 +75,19 @@ public class GameSettings {
 	}
 	
 	public static void bigFieldMode(){
-		goal_passive = false;
+		goal_passive = true;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*2.8f;
 		playerSpeed = 0.005f * ((float)GameWindow.WINDOW_WIDTH/1280f);
 		
-		hustleLength = 200;
-		hustleCooldown = 225;
+		hustleLength = 300;
+		hustleCooldown = 325;
 		hustleSpeed = 2f; // multiplier of playerSpeed
 		
 		ballSize = (GameWindow.WINDOW_HEIGHT/100)*.75f;
-		maxBallVel = 2f; // multiplier of playerSpeed
+		maxBallVel = 1.75f; // multiplier of playerSpeed
 		buildUpSpeed = 0.1f;
-		jumpBallSpeed = 1f;
-		ballRotationRadius = GameWindow.WINDOW_WIDTH/45f;
+		jumpBallSpeed = 2f;
+		ballRotationRadius = GameWindow.WINDOW_WIDTH/60f;
 		
 		goalHeight = GameWindow.WINDOW_HEIGHT/6f;
 		goalWidth = GameWindow.WINDOW_WIDTH/16f;

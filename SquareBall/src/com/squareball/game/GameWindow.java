@@ -9,8 +9,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class GameWindow extends StateBasedGame {
 	
-	public static final int WINDOW_WIDTH = 1280;
-	public static final int WINDOW_HEIGHT = 720;
+	public static int WINDOW_WIDTH = 1280;
+	public static int WINDOW_HEIGHT = 720;
 	private static boolean fullScreen = false;
 	private Music music;
 
@@ -24,6 +24,7 @@ public class GameWindow extends StateBasedGame {
 		gc.setMusicVolume(0.35f);
 		music.loop();
 		gc.setTargetFrameRate(60);
+		gc.setVSync(true);
 		gc.getInput().clearControlPressedRecord();
 		gc.setMouseGrabbed(true);
 		//gc.getGraphics().setFont(new TrueTypeFont(new Font("sans-serif", Font.PLAIN, 18), true));
@@ -58,10 +59,11 @@ public class GameWindow extends StateBasedGame {
 
 	public static void main(String[] args) throws SlickException{
 		GameWindow window = new GameWindow();
-		window.addState(new PlayState());
 		
 		AppGameContainer app = new AppGameContainer(new GameWindow());
-		app.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, fullScreen);
+		WINDOW_WIDTH = app.getScreenWidth();
+		WINDOW_HEIGHT = app.getScreenHeight();
+		app.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
 		app.start();
 	}
 

@@ -6,6 +6,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 
+import com.squareball.game.GameWindow;
+
 public class ParticleManager {
 	
 	private ArrayList<Particle> particles;
@@ -46,7 +48,7 @@ public class ParticleManager {
 		tick = 1;
 		this.x = x/2;
 		this.y = y/2;
-		radius = 10;
+		radius = GameWindow.WINDOW_HEIGHT/50f;
 		this.life = life;
 		this.density = density;
 		this.colorFreq = freq;

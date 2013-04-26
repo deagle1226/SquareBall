@@ -15,7 +15,7 @@ public class Goal extends StaticEntity {
 	private Color color;
 	private boolean left;
 	private int scoreSize = (int) (GameSettings.goalWidth/20);
-	private int scorePause = 51;
+	private int scorePause = 52;
 	private int scoreTime = 0;
 	public int team;
 	
