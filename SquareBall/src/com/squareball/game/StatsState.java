@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
@@ -23,15 +24,18 @@ public class StatsState extends BasicGameState {
 	public static int[] interceptions = {0,0,0,0};
 	public static int[] catches = {0,0,0,0};
 	public static int[] points = {0,0,0,0};
+	public static long matchTime = 0;
 	
 	private UnicodeFont font18;
 	private UnicodeFont font32;
 	private Map map;
+	
+	private Music daisuke;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		
+		daisuke = new Music("res/Daisuke.ogg", false);
 		steals = new int[]{0,0,0,0};
 		goal_time = new int[]{0,0,0,0};
 		ball_time = new int[]{0,0,0,0};
@@ -40,6 +44,7 @@ public class StatsState extends BasicGameState {
 		interceptions = new int[]{0,0,0,0};
 		catches = new int[]{0,0,0,0};
 		points = new int[]{0,0,0,0};
+		matchTime = 0;
 		
 		font18 = new UnicodeFont("res/oswald.ttf", (int) (18*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
 		font18.addAsciiGlyphs();
@@ -51,6 +56,14 @@ public class StatsState extends BasicGameState {
 		font32.loadGlyphs();
 		
 		map = new Map();
+		
+	}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.enter(container, game);
+		daisuke.loop();
 	}
 
 	@Override
@@ -139,7 +152,7 @@ public class StatsState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		if (gc.getInput().isKeyPressed(Keyboard.KEY_RETURN) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)){
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_RETURN) || gc.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)){
 			sbg.enterState(0);
 		}
 	}

@@ -12,7 +12,6 @@ public class GameWindow extends StateBasedGame {
 	public static int WINDOW_WIDTH = 1280;
 	public static int WINDOW_HEIGHT = 720;
 	private static boolean fullScreen = false;
-	private Music music;
 
 	public GameWindow() {
 		super("SquareBall");
@@ -20,9 +19,7 @@ public class GameWindow extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
-		music = new Music("res/music.ogg", false);
 		gc.setMusicVolume(0.35f);
-		music.loop();
 		gc.setTargetFrameRate(60);
 		gc.setVSync(true);
 		gc.getInput().clearControlPressedRecord();
@@ -42,10 +39,7 @@ public class GameWindow extends StateBasedGame {
 			}
 			enterState(0);
 		}
-		if (gc.getInput().isKeyPressed(Keyboard.KEY_M)){
-			if (music.playing()) music.pause();
-			else music.resume();
-		}
+		
 		if (gc.getInput().isKeyPressed(Keyboard.KEY_UP)){
 			gc.setMusicVolume(gc.getMusicVolume()+(0.05f));
 			if (gc.getMusicVolume() > 1) gc.setMusicVolume(1f);

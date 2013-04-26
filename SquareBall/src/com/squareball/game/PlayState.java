@@ -41,7 +41,12 @@ public class PlayState extends BasicGameState implements EntityManager {
 	private Sound point1;
 	private Sound point2;
 	
+	private Music hydrogen;
+	private Music hiphop;
+	private Music current;
+	
 	GameContainer container;
+	Map m;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
@@ -51,8 +56,10 @@ public class PlayState extends BasicGameState implements EntityManager {
 		font64.getEffects().add(new ColorEffect());
 		font64.loadGlyphs();
 		
-		Map m = new Map();
-		entities.add(m);
+		hiphop = new Music("res/music.ogg", false);
+		hydrogen = new Music("res/Hydrogen.ogg", false);
+		
+		m = new Map();
 		Goal g = new Goal(true);
 		entities.add(g);
 		g = new Goal(false);
@@ -76,20 +83,23 @@ public class PlayState extends BasicGameState implements EntityManager {
 		point1 = new Sound("res/point1.ogg");
 		point2 = new Sound("res/point2.ogg");
 		container = gc;
+		
+		
 	}
 
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
+		StatsState.matchTime = 0;
 		super.enter(gc, sbg);
+		current = hydrogen;
+		current.play();
 		ScoreState.clear();
 		sbg.getState(2).init(gc, sbg);
 		entities.clear();
 		removeList.clear();
 		addList.clear();
 		
-		Map m = new Map();
-		entities.add(m);
 		Goal g = new Goal(true);
 		entities.add(g);
 		g = new Goal(false);
@@ -114,6 +124,8 @@ public class PlayState extends BasicGameState implements EntityManager {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
+		m.render(g);
+		font64.drawString(GameWindow.WINDOW_WIDTH/2 - font64.getWidth(timeFormat(0))/2,10, timeFormat(StatsState.matchTime), Color.lightGray);
 		for (Entity e : entities){
 			e.render(g);
 		}
@@ -139,7 +151,18 @@ public class PlayState extends BasicGameState implements EntityManager {
 			g.fill(new Rectangle(0,0,GameWindow.WINDOW_WIDTH, GameWindow.WINDOW_HEIGHT));
 			font64.drawString(GameWindow.WINDOW_WIDTH/2 - font64.getWidth("PAUSED")/2, GameWindow.WINDOW_HEIGHT/2 - font64.getLineHeight()/2, "PAUSED", Color.white);
 		}
-		//g.drawString("1: " + ScoreState.score1 + "  2: " + ScoreState.score2, GameWindow.WINDOW_WIDTH/2, 10);
+		
+	}
+	
+	public String timeFormat(long millis){
+		String str = "";
+		long minutes = millis/1000/60;
+		long seconds = millis/1000 - (minutes*60);
+		str += minutes + ":";
+		if (seconds < 10) str += "0";
+		str += seconds;
+		str += "." + ((millis/100) - (seconds*10));
+		return str;
 	}
 
 	@Override
@@ -149,7 +172,8 @@ public class PlayState extends BasicGameState implements EntityManager {
 		if (countDown < 0){
 			pausedTime++;
 			if (!paused){
-				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER))&& pausedTime > 20){
+				StatsState.matchTime+=delta;
+				if (gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) && pausedTime > 20){
 					paused = true;
 					pausedTime = 0;
 				}
@@ -180,15 +204,23 @@ public class PlayState extends BasicGameState implements EntityManager {
 				}
 			} else {
 				
-				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER) && pausedTime > 20)){
+				if (gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) && pausedTime > 20){
 					paused = false;
 					pausedTime = 0;
-				} else if (gc.getInput().isButtonPressed(6, gc.getInput().ANY_CONTROLLER)){
+				} else if (gc.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)){
 					sbg.enterState(0);
 				}
 			}
 		}
-		
+		if (!current.playing() || gc.getInput().isKeyPressed(Keyboard.KEY_RIGHT)){
+			if (current.equals(hiphop)) current = hydrogen;
+			else if (current.equals(hydrogen)) current = hiphop;
+			current.play();
+		}
+		if (gc.getInput().isKeyPressed(Keyboard.KEY_M)){
+			if (current.playing()) current.pause();
+			else current.resume();
+		}
 	}
 
 	@Override
