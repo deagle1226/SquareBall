@@ -35,7 +35,7 @@ public class StatsState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		daisuke = new Music("res/Daisuke.ogg", false);
+		daisuke = LoadingGameState.music.get(3);
 		steals = new int[]{0,0,0,0};
 		goal_time = new int[]{0,0,0,0};
 		ball_time = new int[]{0,0,0,0};
@@ -45,23 +45,15 @@ public class StatsState extends BasicGameState {
 		catches = new int[]{0,0,0,0};
 		points = new int[]{0,0,0,0};
 		matchTime = 0;
-		
-		font18 = new UnicodeFont("res/oswald.ttf", (int) (18*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
-		font18.addAsciiGlyphs();
-		font18.getEffects().add(new ColorEffect());
-		font18.loadGlyphs();
-		font32 = new UnicodeFont("res/oswald.ttf", (int) (32*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
-		font32.addAsciiGlyphs();
-		font32.getEffects().add(new ColorEffect());
-		font32.loadGlyphs();
-		
-		map = new Map();
-		
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		font18 = LoadingGameState.font.get(LoadingGameState.font16);
+		font32 = LoadingGameState.font.get(LoadingGameState.font32);
+		
+		map = new Map();
 		super.enter(container, game);
 		daisuke.loop();
 	}

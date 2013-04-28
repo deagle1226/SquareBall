@@ -25,28 +25,29 @@ public class GameWindow extends StateBasedGame {
 		gc.getInput().clearControlPressedRecord();
 		gc.setMouseGrabbed(true);
 		//gc.getGraphics().setFont(new TrueTypeFont(new Font("sans-serif", Font.PLAIN, 18), true));
-		this.addState(new StartMenuState());
-		this.addState(new PlayState());
-		this.addState(new StatsState());
-		enterState(0);
+		
+		this.addState(new LoadingGameState());
+		enterState(999);
 	}
 	
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
-		if (gc.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)){
-			if (getCurrentStateID() == 0){
-				System.exit(0);
+		if (this.getCurrentStateID() != 999){
+			if (gc.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)){
+				if (getCurrentStateID() == 0){
+					System.exit(0);
+				}
+				enterState(0);
 			}
-			enterState(0);
-		}
-		
-		if (gc.getInput().isKeyPressed(Keyboard.KEY_UP)){
-			gc.setMusicVolume(gc.getMusicVolume()+(0.05f));
-			if (gc.getMusicVolume() > 1) gc.setMusicVolume(1f);
 			
-		} else if (gc.getInput().isKeyPressed(Keyboard.KEY_DOWN)){
-			gc.setMusicVolume(gc.getMusicVolume()-(0.05f));
-			if (gc.getMusicVolume() < 0) gc.setMusicVolume(0f);
+			if (gc.getInput().isKeyPressed(Keyboard.KEY_UP)){
+				gc.setMusicVolume(gc.getMusicVolume()+(0.05f));
+				if (gc.getMusicVolume() > 1) gc.setMusicVolume(1f);
+				
+			} else if (gc.getInput().isKeyPressed(Keyboard.KEY_DOWN)){
+				gc.setMusicVolume(gc.getMusicVolume()-(0.05f));
+				if (gc.getMusicVolume() < 0) gc.setMusicVolume(0f);
+			}
 		}
 		super.update(gc, delta);
 	}
@@ -55,9 +56,14 @@ public class GameWindow extends StateBasedGame {
 		GameWindow window = new GameWindow();
 		
 		AppGameContainer app = new AppGameContainer(new GameWindow());
-		WINDOW_WIDTH = app.getScreenWidth();
-		WINDOW_HEIGHT = app.getScreenHeight();
-		app.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
+		if (fullScreen) {
+			WINDOW_WIDTH = app.getScreenWidth();
+			WINDOW_HEIGHT = app.getScreenHeight();
+			app.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, true);
+		} else {
+			app.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, false);
+		}
+		
 		app.start();
 	}
 

@@ -3,6 +3,7 @@ package com.squareball.game;
 public class GameSettings {
 	
 	public static int maxScore = 100;
+	public static int scorePause = 750; //ms
 	
 	public static boolean goal_passive = false;
 	
@@ -15,7 +16,7 @@ public class GameSettings {
 	public static int hustleCooldown = 205;
 	public static float hustleSpeed = 3f; // multiplier of playerSpeed
 	
-	public static int catchCooldown = 200;
+	public static int catchCooldown = 100;
 	
 	public static float ballSize = (GameWindow.WINDOW_HEIGHT/100)*1.5f;
 	public static float maxBallVel = 4f; // multiplier of playerSpeed
@@ -31,6 +32,8 @@ public class GameSettings {
 	
 	
 	public static void superMode(){
+		scorePause = 250;
+		
 		goal_passive = false;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*7f;
 		playerSpeed = 0.023f * ((float)GameWindow.WINDOW_WIDTH/1280f);
@@ -53,6 +56,8 @@ public class GameSettings {
 	}
 	
 	public static void classicMode() {
+		scorePause = 750;
+		
 		goal_passive = false;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*5.5f;
 		playerSpeed = 0.01f * ((float)GameWindow.WINDOW_WIDTH/1280f);
@@ -75,6 +80,8 @@ public class GameSettings {
 	}
 	
 	public static void bigFieldMode(){
+		scorePause = 1000;
+		
 		goal_passive = true;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*2.8f;
 		playerSpeed = 0.005f * ((float)GameWindow.WINDOW_WIDTH/1280f);
@@ -93,7 +100,7 @@ public class GameSettings {
 		goalWidth = GameWindow.WINDOW_WIDTH/16f;
 		
 		friction_map = 0.98f;
-		friction_goal = 0.92f;
+		friction_goal = 0.9f;
 	}
 
 }

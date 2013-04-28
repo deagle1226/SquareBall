@@ -21,6 +21,7 @@ import com.squareball.game.entity.EntityManager;
 import com.squareball.game.entity.Goal;
 import com.squareball.game.entity.Map;
 import com.squareball.game.entity.Player;
+import com.squareball.game.gui.GameClock;
 
 public class PlayState extends BasicGameState implements EntityManager {
 	
@@ -46,64 +47,43 @@ public class PlayState extends BasicGameState implements EntityManager {
 	private Music current;
 	
 	GameContainer container;
-	Map m;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		font64 = new UnicodeFont("res/oswald.ttf", (int) (64*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
-		font64.addAsciiGlyphs();
-		font64.getEffects().add(new ColorEffect());
-		font64.loadGlyphs();
-		
-		hiphop = new Music("res/music.ogg", false);
-		hydrogen = new Music("res/Hydrogen.ogg", false);
-		
-		m = new Map();
-		Goal g = new Goal(true);
-		entities.add(g);
-		g = new Goal(false);
-		entities.add(g);
-		
-		int n = 0;
-		for (int i = 0; i < gc.getInput().getControllerCount(); i++){
-			if (gc.getInput().getAxisCount(i) == 5 && n < 4){
-				Player player = new Player(i, n%2, n);
-				entities.add(player);
-				n++;
-			}
-		}
-		
-		Ball b = new Ball(true);
-		entities.add(b);
-		
-		ballCatch = new Sound("res/catch.ogg");
-		ballIntercept = new Sound("res/intercept.ogg");
-		whoosh = new Sound("res/whoosh.ogg");
-		point1 = new Sound("res/point1.ogg");
-		point2 = new Sound("res/point2.ogg");
-		container = gc;
-		
-		
 	}
 
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
 		StatsState.matchTime = 0;
+		
+		font64 = LoadingGameState.font.get(LoadingGameState.font64);
+		hiphop = LoadingGameState.music.get(0);
+		hydrogen = LoadingGameState.music.get(1);
+		ballCatch = LoadingGameState.sound.get(0);
+		ballIntercept = LoadingGameState.sound.get(1);
+		whoosh = LoadingGameState.sound.get(2);
+		point1 = LoadingGameState.sound.get(3);
+		point2 = LoadingGameState.sound.get(4);
+		container = gc;
+		
 		super.enter(gc, sbg);
+		
 		current = hydrogen;
 		current.play();
+		
 		ScoreState.clear();
 		sbg.getState(2).init(gc, sbg);
+		
 		entities.clear();
 		removeList.clear();
 		addList.clear();
 		
-		Goal g = new Goal(true);
-		entities.add(g);
-		g = new Goal(false);
-		entities.add(g);
+		entities.add(new Map());
+		entities.add(new GameClock(font64));
+		entities.add(new Goal(true));
+		entities.add(new Goal(false));
 		
 		int n = 0;
 		for (int i = 0; i < gc.getInput().getControllerCount(); i++){
@@ -113,9 +93,8 @@ public class PlayState extends BasicGameState implements EntityManager {
 				n++;
 			}
 		}
+		entities.add(new Ball(true));
 		
-		Ball b = new Ball(true);
-		entities.add(b);
 		paused = false;
 		pausedTime = 0;
 		countDown = GameSettings.countDown;
@@ -124,7 +103,7 @@ public class PlayState extends BasicGameState implements EntityManager {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
-		m.render(g);
+		//m.render(g);
 		font64.drawString(GameWindow.WINDOW_WIDTH/2 - font64.getWidth(timeFormat(0))/2,10, timeFormat(StatsState.matchTime), Color.lightGray);
 		for (Entity e : entities){
 			e.render(g);
@@ -173,7 +152,7 @@ public class PlayState extends BasicGameState implements EntityManager {
 			pausedTime++;
 			if (!paused){
 				StatsState.matchTime+=delta;
-				if (gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) && pausedTime > 20){
+				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)) && pausedTime > 20){
 					paused = true;
 					pausedTime = 0;
 				}
@@ -186,7 +165,6 @@ public class PlayState extends BasicGameState implements EntityManager {
 					
 					for (int j=i+1;j<entities.size();j++) {
 						Entity other = entities.get(j);
-						
 						if (entity.intersects(other)) {
 							entity.collide(gc, this, other);
 							other.collide(gc, this, entity);
@@ -203,8 +181,7 @@ public class PlayState extends BasicGameState implements EntityManager {
 					e.update(gc, this, delta);
 				}
 			} else {
-				
-				if (gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) && pausedTime > 20){
+				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)) && pausedTime > 20){
 					paused = false;
 					pausedTime = 0;
 				} else if (gc.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)){

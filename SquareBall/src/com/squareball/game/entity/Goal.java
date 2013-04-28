@@ -14,10 +14,10 @@ public class Goal extends StaticEntity {
 	
 	private Color color;
 	private boolean left;
-	private int scoreSize = (int) (GameSettings.goalWidth/20);
-	private int scorePause = 52;
+	private int scorePause = GameSettings.scorePause;
 	private int scoreTime = 0;
 	public int team;
+	private int delta=1;
 	
 	public Goal(boolean left){
 		this.left = left;
@@ -68,9 +68,17 @@ public class Goal extends StaticEntity {
 		
 
 	@Override
+	public void update(GameContainer gc, EntityManager manager, int delta) {
+		this.delta = delta;
+		super.update(gc, manager, delta);
+		
+	}
+
+
+	@Override
 	public void collide(GameContainer gc, EntityManager manager, Entity other) {
 		if (other instanceof Ball){
-			scoreTime--;
+			scoreTime-=delta;
 			if (scoreTime < 0){
 				if (left) ScoreState.score1++;
 				else ScoreState.score2++;

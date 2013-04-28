@@ -31,19 +31,13 @@ public abstract class MenuState extends BasicGameState {
 		buttons = new ArrayList<Button>();
 		focused = 0;
 		map = new Map();
+		font64 = LoadingGameState.font.get(3);
+		font32 = LoadingGameState.font.get(LoadingGameState.font32);
 	}
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		font32 = new UnicodeFont("res/oswald.ttf", (int) (32*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
-		font32.addAsciiGlyphs();
-		font32.getEffects().add(new ColorEffect());
-		font32.loadGlyphs();
-		font64 = new UnicodeFont("res/oswald.ttf", (int) (128*(GameWindow.WINDOW_HEIGHT/720f)) , false, false);
-		font64.addAsciiGlyphs();
-		font64.getEffects().add(new ColorEffect());
-		font64.loadGlyphs();
 	}
 
 	@Override
