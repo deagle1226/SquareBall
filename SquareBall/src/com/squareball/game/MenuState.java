@@ -20,7 +20,7 @@ public abstract class MenuState extends BasicGameState {
 	
 	protected ArrayList<Button> buttons;
 	private int focused;
-	private int moveTime = 15;
+	private int moveTime = 300;
 	private int moveCur = 0;
 	
 	private UnicodeFont font32;
@@ -53,7 +53,7 @@ public abstract class MenuState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		handleInput(gc);
+		handleInput(gc, delta);
 		int i = 0;
 		for (Button b : buttons){
 			if (i==focused) b.setFocus(true);
@@ -63,8 +63,8 @@ public abstract class MenuState extends BasicGameState {
 		}
 	}
 	
-	public void handleInput(GameContainer gc){
-		moveCur--;
+	public void handleInput(GameContainer gc, int delta){
+		moveCur-=delta;
 		if (moveCur < 0){
 			if (gc.getInput().isControllerDown(gc.getInput().ANY_CONTROLLER)){
 				next();

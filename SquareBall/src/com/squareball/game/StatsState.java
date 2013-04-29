@@ -13,6 +13,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.squareball.game.entity.Map;
+import com.squareball.game.gui.GameClock;
 
 public class StatsState extends BasicGameState {
 	
@@ -31,6 +32,7 @@ public class StatsState extends BasicGameState {
 	private Map map;
 	
 	private Music daisuke;
+	private GameClock clock;
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
@@ -56,6 +58,7 @@ public class StatsState extends BasicGameState {
 		map = new Map();
 		super.enter(container, game);
 		daisuke.loop();
+		clock = new GameClock(font32);
 	}
 
 	@Override
@@ -65,6 +68,7 @@ public class StatsState extends BasicGameState {
 		drawBoxes(g);
 		drawStats(g);
 		drawScore(g);
+		clock.render(g);
 	}
 	
 	public String min_sec(int time){

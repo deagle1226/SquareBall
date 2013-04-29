@@ -76,8 +76,8 @@ public class Player extends MobileEntity {
 	public void controllerUpdate(GameContainer gc, EntityManager manager, int delta){
 		vel.x = 0;
 		vel.y = 0;
-		vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed*delta);
-		vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*delta);
+		vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed);
+		vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed);
 		sprintCooldown -= delta;
 		sprintTime -= delta;
 		if (sprintCooldown < 0 && !caught){
@@ -98,8 +98,8 @@ public class Player extends MobileEntity {
 			triggered = false;
 		}
 		if (sprintTime > 0){
-			vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed*delta*sprintSpeed);
-			vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*delta*sprintSpeed);
+			vel.x = gc.getInput().getAxisValue(controllerNumber, 1) * (speed*sprintSpeed);
+			vel.y = gc.getInput().getAxisValue(controllerNumber, 0) * (speed*sprintSpeed);
 		}
 		if (caught){
 			StatsState.ball_time[playerNumber]++;

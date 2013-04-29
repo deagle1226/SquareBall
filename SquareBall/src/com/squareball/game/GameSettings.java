@@ -7,7 +7,7 @@ public class GameSettings {
 	
 	public static boolean goal_passive = false;
 	
-	public static int countDown = 210;
+	public static int countDown = 3500;
 	
 	public static float playerSize = (GameWindow.WINDOW_HEIGHT/100)*5.5f;
 	public static float playerSpeed = 0.01f * ((float)GameWindow.WINDOW_WIDTH/1280f);
@@ -16,7 +16,7 @@ public class GameSettings {
 	public static int hustleCooldown = 205;
 	public static float hustleSpeed = 3f; // multiplier of playerSpeed
 	
-	public static int catchCooldown = 100;
+	public static int catchCooldown = 50;
 	
 	public static float ballSize = (GameWindow.WINDOW_HEIGHT/100)*1.5f;
 	public static float maxBallVel = 4f; // multiplier of playerSpeed
@@ -32,15 +32,15 @@ public class GameSettings {
 	
 	
 	public static void superMode(){
-		scorePause = 250;
+		scorePause = 100;
 		
 		goal_passive = false;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*7f;
-		playerSpeed = 0.023f * ((float)GameWindow.WINDOW_WIDTH/1280f);
+		playerSpeed = 0.3f * ((float)GameWindow.WINDOW_WIDTH/1280f);
 		
 		hustleLength = 100;
 		hustleCooldown = 125;
-		hustleSpeed = 3f; // multiplier of playerSpeed
+		hustleSpeed = 2f; // multiplier of playerSpeed
 		
 		ballSize = (GameWindow.WINDOW_HEIGHT/100)*3f;
 		maxBallVel = 5f; // multiplier of playerSpeed
@@ -56,15 +56,15 @@ public class GameSettings {
 	}
 	
 	public static void classicMode() {
-		scorePause = 750;
+		scorePause = 650; //750
 		
 		goal_passive = false;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*5.5f;
-		playerSpeed = 0.01f * ((float)GameWindow.WINDOW_WIDTH/1280f);
+		playerSpeed = .15f * ((float)GameWindow.WINDOW_WIDTH/1280f);
 		
 		hustleLength = 200;
 		hustleCooldown = 225;
-		hustleSpeed = 3f; // multiplier of playerSpeed
+		hustleSpeed = 2f; // multiplier of playerSpeed
 		
 		ballSize = (GameWindow.WINDOW_HEIGHT/100)*1.5f;
 		maxBallVel = 4f; // multiplier of playerSpeed
@@ -84,7 +84,7 @@ public class GameSettings {
 		
 		goal_passive = true;
 		playerSize = (GameWindow.WINDOW_HEIGHT/100)*2.8f;
-		playerSpeed = 0.005f * ((float)GameWindow.WINDOW_WIDTH/1280f);
+		playerSpeed = 0.08f * ((float)GameWindow.WINDOW_WIDTH/1280f);
 		
 		hustleLength = 300;
 		hustleCooldown = 325;

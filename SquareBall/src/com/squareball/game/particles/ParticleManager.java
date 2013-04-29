@@ -19,7 +19,7 @@ public class ParticleManager {
 	
 	private int freq = 2;
 	private int tick;
-	private int density = 4;
+	private float density = 4;
 	private float colorFreq;
 	private Color color;
 	private boolean rainbow;
@@ -35,7 +35,7 @@ public class ParticleManager {
 		y = r;
 		radius = r;
 		this.life = life;
-		this.density = density;
+		this.density = density/16f;
 		this.colorFreq = freq;
 		this.color =color;
 		this.rainbow = rainbow;
@@ -50,7 +50,7 @@ public class ParticleManager {
 		this.y = y/2;
 		radius = GameWindow.WINDOW_HEIGHT/50f;
 		this.life = life;
-		this.density = density;
+		this.density = density/16f;
 		this.colorFreq = freq;
 		this.color =color;
 		this.rainbow = rainbow;
@@ -60,7 +60,7 @@ public class ParticleManager {
 		tick -= delta;
 		if (tick < 0){
 			tick = freq;
-			for (int i = 0; i < density; i++){
+			for (int i = 0; i < density*delta; i++){
 				add(pos, radius);
 			}
 		}

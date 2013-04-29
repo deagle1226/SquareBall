@@ -13,8 +13,8 @@ public abstract class MobileEntity implements Entity {
 	@Override
 	public void update(GameContainer gc, EntityManager manager, int delta) {
 		boundsCheck();
-		Vector2f temp = new Vector2f(vel).scale(delta);
-		shape.setLocation(shape.getX() + temp.x, shape.getY() + temp.y);
+		Vector2f temp = new Vector2f(vel);
+		shape.setLocation(shape.getX() + temp.x*delta, shape.getY() + temp.y*delta);
 	}
 	
 	@Override

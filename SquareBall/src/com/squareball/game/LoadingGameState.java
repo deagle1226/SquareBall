@@ -2,6 +2,7 @@ package com.squareball.game;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Music;
@@ -9,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -18,6 +20,7 @@ public class LoadingGameState extends BasicGameState {
 	public static final int font64 = 0;
 	public static final int font32 = 1;
 	public static final int font16 = 2;
+	public static final int font128 = 3;
 	
 	private ArrayList<String> musicPath;
 	private ArrayList<String> soundPath;
@@ -29,6 +32,8 @@ public class LoadingGameState extends BasicGameState {
 	
 	private String text;
 	private int step = 0;
+	private float part = 0;
+	private float whole;
 	
 
 	@Override
@@ -59,15 +64,12 @@ public class LoadingGameState extends BasicGameState {
 	}
 	
 	public void loadMusic() throws SlickException{
-		for (String path : musicPath){
-			music.add(new Music(path, false));
-		}
+		System.out.println(musicPath.get(music.size()) + music.size());
+		music.add(new Music(musicPath.get(music.size()), true));
 	}
 	
 	public void loadSound() throws SlickException{
-		for (String path : soundPath){
-			sound.add(new Sound(path));
-		}
+		sound.add(new Sound(soundPath.get(sound.size())));
 	}
 	
 	public void loadFont() throws SlickException{
@@ -87,33 +89,64 @@ public class LoadingGameState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		g.drawString(text, 10, 100);
+		g.setColor(Color.lightGray);
+		g.fill(new Rectangle(100,200,200,20));
+		g.setColor(Color.white);
+		g.fill(new Rectangle(100,200,200*(part/whole),20));
+		g.setColor(Color.lightGray);
+		g.fill(new Rectangle(100,300,200,20));
+		g.setColor(Color.white);
+		g.fill(new Rectangle(100,300,200*((step-1)/3f),20));
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
 		switch (step){
-		case 0: 
-			text = "Loading Music...";
+		case 0:
+			text = "Loading Music...0";
+			whole = musicPath.size();
+			step++;
 			break;
 		case 1:
-			loadMusic();
-			text = "Loading Sounds...";
+			if (part < musicPath.size()){
+				loadMusic();
+				if (part == musicPath.size()-1) {
+					part = 0;
+					step++;
+					text = "Loading Sounds...0";
+					whole = soundPath.size();
+				} else {
+					part++;
+					text = "Loading Music..." + part;
+				}
+			}
 			break;
 		case 2:
-			loadSound();
-			text = "Loading Fonts...";
+			if (part <= soundPath.size()){
+				loadSound();
+				if (part == soundPath.size()-1) {
+					part = 0;
+					step++;
+					text = "Loading Fonts...";
+					whole = 4;
+				} else {
+					part++;
+					text = "Loading Sounds..." + part;
+				}
+			}
 			break;
 		case 3:
 			loadFont();
+			step++;
 			break;
 		case 4:
 			sbg.addState(new StartMenuState());
 			sbg.addState(new PlayState());
 			sbg.addState(new StatsState());
 			sbg.enterState(0);
+			break;
 		}
-		step++;
 	}
 
 	@Override

@@ -20,8 +20,8 @@ public class GameWindow extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
 		gc.setMusicVolume(0.35f);
-		gc.setTargetFrameRate(60);
-		gc.setVSync(true);
+		gc.setTargetFrameRate(120);
+		//gc.setVSync(true);
 		gc.getInput().clearControlPressedRecord();
 		gc.setMouseGrabbed(true);
 		//gc.getGraphics().setFont(new TrueTypeFont(new Font("sans-serif", Font.PLAIN, 18), true));

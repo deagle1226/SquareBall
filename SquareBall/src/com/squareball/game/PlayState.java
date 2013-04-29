@@ -81,7 +81,7 @@ public class PlayState extends BasicGameState implements EntityManager {
 		addList.clear();
 		
 		entities.add(new Map());
-		entities.add(new GameClock(font64));
+		entities.add(new GameClock(LoadingGameState.font.get(LoadingGameState.font32)));
 		entities.add(new Goal(true));
 		entities.add(new Goal(false));
 		
@@ -108,19 +108,16 @@ public class PlayState extends BasicGameState implements EntityManager {
 		for (Entity e : entities){
 			e.render(g);
 		}
+		float delta = 1000f/gc.getFPS();
 		if (countDown > 0){
 			String count = "3";
-			if ((countDown+1-30)%60==0) {
-				if (countDown == 29){
-					ballCatch(1f);
-				} else {
-					
-					ballInterception(1f);
-				}
-			}
-			if (countDown < 150) count = "2";
-			if (countDown < 90) count = "1";
-			if (countDown < 30) count = "GO!";
+			if (countDown < 3500 && countDown+delta > 3500)ballCatch(1f);
+			if (countDown < 2500 && countDown+delta > 2500)ballCatch(1f);
+			if (countDown < 1500 && countDown+delta > 1500)ballCatch(1f);
+			if (countDown < 500 && countDown+delta > 500)ballInterception(1f);
+			if (countDown < 2500) count = "2";
+			if (countDown < 1500) count = "1";
+			if (countDown < 500) count = "GO!";
 			g.setColor(new Color(0,0,0,0.3f));
 			g.fill(new Rectangle(0,0,GameWindow.WINDOW_WIDTH, GameWindow.WINDOW_HEIGHT));
 			font64.drawString(GameWindow.WINDOW_WIDTH/2 - font64.getWidth(count)/2, GameWindow.WINDOW_HEIGHT/2 - font64.getLineHeight()/2, count, Color.white);
@@ -147,12 +144,12 @@ public class PlayState extends BasicGameState implements EntityManager {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		countDown--;
+		countDown-=delta;
 		if (countDown < 0){
-			pausedTime++;
+			pausedTime+=delta;
 			if (!paused){
 				StatsState.matchTime+=delta;
-				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)) && pausedTime > 20){
+				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)) && pausedTime > 200){
 					paused = true;
 					pausedTime = 0;
 				}
@@ -181,7 +178,7 @@ public class PlayState extends BasicGameState implements EntityManager {
 					e.update(gc, this, delta);
 				}
 			} else {
-				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)) && pausedTime > 20){
+				if ((gc.getInput().isKeyPressed(Keyboard.KEY_SPACE) || gc.getInput().isButtonPressed(7, gc.getInput().ANY_CONTROLLER)) && pausedTime > 200){
 					paused = false;
 					pausedTime = 0;
 				} else if (gc.getInput().isKeyPressed(Keyboard.KEY_ESCAPE)){
