@@ -7,7 +7,7 @@ java game prototype
 away in favor of strategy, depth, skill, and teamwork.*
 
 
-#### Features
+#### Info
 - Plays on Windows (for now)
 - Only supported/tested with Xbox 360 controllers
 - A - catch the ball
